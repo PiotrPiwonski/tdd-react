@@ -2,7 +2,10 @@ import SingUpPage from "./pages/SingUpPage";
 
 function App() {
   return (
-    <SingUpPage/>
+      <div className="container">
+        <SingUpPage/>
+      </div>
+
   );
 }
 
