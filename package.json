@@ -40,5 +40,8 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(axios))"
     ]
+  },
+  "devDependencies": {
+    "msw": "^1.2.1"
   }
 }
