@@ -26,8 +26,8 @@ class SingUpPage extends Component {
             email,
             password
         };
-        axios.post("/api/1.0/users", body);
-        // fetch("/api/1.0/users", {
+        axios.post('/api/1.0/users', body);
+        // fetch("http://localhost:8080/api/1.0/users", {
         //     method: "POST",
         //     headers: {
         //         "Content-Type": "application/json"

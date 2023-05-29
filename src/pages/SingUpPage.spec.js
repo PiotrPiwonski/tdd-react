@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 // import axios from "axios";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import resolve from "resolve";
+// import resolve from "resolve";
 
 describe('Sing Up Page', () => {
     describe('Layout', () => {
@@ -91,7 +91,6 @@ describe('Sing Up Page', () => {
             // axios.post = mockFn; // for axios
             // window.fetch = mockFn;
             // userEvent.click(button);
-
             // const firstCallOfMockFunction = mockFn.mock.calls[0];
             // const body = firstCallOfMockFunction[1]; // for axios
             // const body = JSON.parse(firstCallOfMockFunction[1].body);
