@@ -27,6 +27,13 @@ class SingUpPage extends Component {
             password
         };
         axios.post("/api/1.0/users", body);
+        // fetch("/api/1.0/users", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify(body),
+        // });
     };
     render() {
         let disabled = true;
