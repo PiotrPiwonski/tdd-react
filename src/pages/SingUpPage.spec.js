@@ -1,5 +1,5 @@
 import SingUpPage from './SingUpPage';
-import {render, screen} from '@testing-library/react';
+import {render, screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 // import axios from "axios";
 import { setupServer } from "msw/node";
@@ -112,7 +112,7 @@ describe('Sing Up Page', () => {
             //     password: "P4ssword",
             // });
 
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await screen.findByText('Please check your e-mail to activate your account');
 
             expect(requestBody).toEqual({
                 username: "user1",
@@ -127,7 +127,7 @@ describe('Sing Up Page', () => {
             userEvent.click(button);
             // userEvent.click(button);
 
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await screen.findByText('Please check your e-mail to activate your account');
             expect(counter).toBe(1);
         });
         it("displays spinner after clicking the submit", async () => {
@@ -137,6 +137,24 @@ describe('Sing Up Page', () => {
 
             // const spinner = screen.getByRole('status');
             // expect(spinner).toBeInTheDocument();
+            await screen.findByText('Please check your e-mail to activate your account');
+        });
+        it("displays account activation notification after success sing up request", async () => {
+            setup();
+            const massage = 'Please check your e-mail to activate your account';
+            expect(screen.queryByText(massage)).not.toBeInTheDocument();
+            userEvent.click(button);
+            const text = await screen.findByText(massage);
+            expect(text).toBeInTheDocument();
+        });
+        it("hides sing up form after success sing up request", async () => {
+            setup();
+            const form = screen.getByTestId('form-sing-up');
+            userEvent.click(button);
+            // await waitFor(() => {
+            //     expect(form).not.toBeInTheDocument();
+            // });
+            await waitForElementToBeRemoved(form);
         });
     });
 });
