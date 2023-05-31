@@ -10,6 +10,7 @@ class SingUpPage extends Component {
         password: "",
         passwordRepeat: "",
         apiProgress: false,
+        singUpSuccess: false,
     };
 
     onChange = (event) => {
@@ -28,7 +29,9 @@ class SingUpPage extends Component {
             password
         };
         this.setState({apiProgress: true});
-        axios.post('/api/1.0/users', body);
+        axios.post('/api/1.0/users', body).then(() => {
+            this.setState({singUpSuccess: true});
+        });
         // fetch("http://localhost:8080/api/1.0/users", {
         //     method: "POST",
         //     headers: {
@@ -39,13 +42,13 @@ class SingUpPage extends Component {
     };
     render() {
         let disabled = true;
-        const {password, passwordRepeat, apiProgress} = this.state;
+        const {password, passwordRepeat, apiProgress, singUpSuccess} = this.state;
         if (password && passwordRepeat) {
             disabled = password !== passwordRepeat;
         }
         return (
            <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
-               <form className="card mt-5">
+               {!singUpSuccess && (<form className="card mt-5" data-testid="form-sing-up">
                    <div className="card-header">
                        <h1 className="text-center">Sing Up</h1>
                    </div>
@@ -87,18 +90,21 @@ class SingUpPage extends Component {
                                disabled={disabled || apiProgress}
                                onClick={this.submit}
                            >
-                               {apiProgress && <span
+                               {apiProgress && (
+                               <span
                                    className="spinner-border spinner-border-sm"
                                    role="status"
-                                   // aria-hidden="true"
-                               ></span>}
-
+                               ></span>)}
                                Sing Up
                            </button>
                        </div>
                    </div>
-               </form>
-
+               </form>)}
+               {singUpSuccess && (
+                   <div className="alert alert-success mt-3">
+                   Please check your e-mail to activate your account
+               </div>
+               )}
            </div>
         )
     }
