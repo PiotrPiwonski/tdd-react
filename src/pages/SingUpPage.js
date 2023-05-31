@@ -9,6 +9,7 @@ class SingUpPage extends Component {
         email: "",
         password: "",
         passwordRepeat: "",
+        apiProgress: false,
     };
 
     onChange = (event) => {
@@ -26,6 +27,7 @@ class SingUpPage extends Component {
             email,
             password
         };
+        this.setState({apiProgress: true});
         axios.post('/api/1.0/users', body);
         // fetch("http://localhost:8080/api/1.0/users", {
         //     method: "POST",
@@ -37,7 +39,7 @@ class SingUpPage extends Component {
     };
     render() {
         let disabled = true;
-        const {password, passwordRepeat} = this.state;
+        const {password, passwordRepeat, apiProgress} = this.state;
         if (password && passwordRepeat) {
             disabled = password !== passwordRepeat;
         }
@@ -81,10 +83,18 @@ class SingUpPage extends Component {
                        </div>
                        <div className="text-center">
                            <button
-                               disabled={disabled}
-                               onClick={this.submit}
                                className="btn btn-primary"
-                           >Sing Up</button>
+                               disabled={disabled || apiProgress}
+                               onClick={this.submit}
+                           >
+                               {apiProgress && <span
+                                   className="spinner-border spinner-border-sm"
+                                   role="status"
+                                   // aria-hidden="true"
+                               ></span>}
+
+                               Sing Up
+                           </button>
                        </div>
                    </div>
                </form>
