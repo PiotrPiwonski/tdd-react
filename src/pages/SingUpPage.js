@@ -20,7 +20,7 @@ class SingUpPage extends Component {
         });
     };
 
-    submit = (event) => {
+    submit = async (event) => {
         event.preventDefault();
         const {username, email, password} = this.state;
         const body = {
@@ -29,9 +29,14 @@ class SingUpPage extends Component {
             password
         };
         this.setState({apiProgress: true});
-        axios.post('/api/1.0/users', body).then(() => {
+        try {
+            await axios.post('/api/1.0/users', body);
             this.setState({singUpSuccess: true});
-        });
+        } catch (err) {
+
+        }
+
+
         // fetch("http://localhost:8080/api/1.0/users", {
         //     method: "POST",
         //     headers: {
