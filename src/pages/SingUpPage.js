@@ -11,6 +11,7 @@ class SingUpPage extends Component {
         passwordRepeat: "",
         apiProgress: false,
         singUpSuccess: false,
+        errors: {},
     };
 
     onChange = (event) => {
@@ -33,7 +34,9 @@ class SingUpPage extends Component {
             await axios.post('/api/1.0/users', body);
             this.setState({singUpSuccess: true});
         } catch (err) {
-
+            if (err.response.status === 400) {
+                this.setState({errors: err.response.data.validationErrors});
+            }
         }
 
 
@@ -47,7 +50,7 @@ class SingUpPage extends Component {
     };
     render() {
         let disabled = true;
-        const {password, passwordRepeat, apiProgress, singUpSuccess} = this.state;
+        const {password, passwordRepeat, apiProgress, singUpSuccess, errors} = this.state;
         if (password && passwordRepeat) {
             disabled = password !== passwordRepeat;
         }
@@ -65,6 +68,7 @@ class SingUpPage extends Component {
                                onChange={this.onChange}
                                className="form-control"
                            />
+                           <span>{errors.username}</span>
                        </div>
                        <div className="mb-3">
                            <label htmlFor="email" className="form-label">E-mail</label>
