@@ -37,6 +37,7 @@ class SingUpPage extends Component {
             if (err.response.status === 400) {
                 this.setState({errors: err.response.data.validationErrors});
             }
+            this.setState({apiProgress: false});
         }
 
 
