@@ -20,6 +20,7 @@ const server = setupServer(
 
 beforeEach(() => {
     counter = 0;
+
     server.resetHandlers();
 });
 
