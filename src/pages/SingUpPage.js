@@ -56,6 +56,8 @@ class SingUpPage extends Component {
         if (password && passwordRepeat) {
             disabled = password !== passwordRepeat;
         }
+
+        let passwordMismatch = password !== passwordRepeat ? "Password mismatch" : "";
         return (
            <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
                {!singUpSuccess && (<form className="card mt-5" data-testid="form-sing-up">
@@ -82,14 +84,13 @@ class SingUpPage extends Component {
                            help={errors.password}
                            type="password"
                        />
-                       <div className="mb-3">
-                           <label htmlFor="passwordRepeat" className="form-label">Password Repeat</label>
-                           <input
-                               id="passwordRepeat"
-                               type="password"
-                               onChange={this.onChange}
-                               className="form-control"/>
-                       </div>
+                       <Input
+                           id="passwordRepeat"
+                           label="Password Repeat"
+                           onChange={this.onChange}
+                           help={passwordMismatch}
+                           type="password"
+                       />
                        <div className="text-center">
                            <button
                                className="btn btn-primary"
