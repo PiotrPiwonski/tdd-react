@@ -69,21 +69,19 @@ class SingUpPage extends Component {
                            onChange={this.onChange}
                            help={errors.username}
                        />
-                       <div className="mb-3">
-                           <label htmlFor="email" className="form-label">E-mail</label>
-                           <input
-                               id="email"
-                               onChange={this.onChange}
-                               className="form-control"/>
-                       </div>
-                       <div className="mb-3">
-                           <label htmlFor="password" className="form-label">Password</label>
-                           <input
-                               id="password"
-                               type="password"
-                               onChange={this.onChange}
-                               className="form-control"/>
-                       </div>
+                       <Input
+                           id="email"
+                           label="E-mail"
+                           onChange={this.onChange}
+                           help={errors.email}
+                       />
+                       <Input
+                           id="password"
+                           label="Password"
+                           onChange={this.onChange}
+                           help={errors.password}
+                           type="password"
+                       />
                        <div className="mb-3">
                            <label htmlFor="passwordRepeat" className="form-label">Password Repeat</label>
                            <input
