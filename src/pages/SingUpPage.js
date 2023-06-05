@@ -1,5 +1,6 @@
-import { Component} from "react";
+import React, { Component} from "react";
 import axios from "axios";
+import Input from "../components/input";
 
 
 class SingUpPage extends Component {
@@ -62,15 +63,12 @@ class SingUpPage extends Component {
                        <h1 className="text-center">Sing Up</h1>
                    </div>
                    <div className="card-body">
-                       <div className="mb-3">
-                           <label htmlFor="username" className="form-label">Username</label>
-                           <input
-                               id="username"
-                               onChange={this.onChange}
-                               className="form-control"
-                           />
-                           <span>{errors.username}</span>
-                       </div>
+                       <Input
+                           id="username"
+                           label="Username"
+                           onChange={this.onChange}
+                           help={errors.username}
+                       />
                        <div className="mb-3">
                            <label htmlFor="email" className="form-label">E-mail</label>
                            <input
