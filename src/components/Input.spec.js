@@ -1,5 +1,5 @@
 import {render} from "@testing-library/react";
-import Input from "./input";
+import Input from "./Input";
 
 it("has is-invalid class for input when help is set", () => {
     const {container} = render(<Input help="Error message"/>);

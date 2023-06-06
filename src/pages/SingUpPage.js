@@ -1,6 +1,6 @@
 import React, { Component} from "react";
 import axios from "axios";
-import Input from "../components/input";
+import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 
 class SingUpPage extends Component {
@@ -118,18 +118,6 @@ class SingUpPage extends Component {
                    Please check your e-mail to activate your account
                </div>
                )}
-               <img
-                   src="https://flagsapi.com/PL/flat/24.png"
-                   title="Polski"
-                   onClick={() => this.props.i18n.changeLanguage('pl')}
-                   alt="Polish flag"
-               />
-               <img
-                   src="https://flagsapi.com/GB/flat/24.png"
-                   title="English"
-                   onClick={() => this.props.i18n.changeLanguage('en')}
-                   alt="English flag"
-               />
            </div>
         )
     }
