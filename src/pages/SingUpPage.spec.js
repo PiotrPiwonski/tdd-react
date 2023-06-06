@@ -77,11 +77,11 @@ describe('Sing Up Page', () => {
         });
     });
     describe("Interactions", () => {
-        let button, passwordInput, passwordRepeatInput;
+        let button, passwordInput, passwordRepeatInput, usernameInput, emailInput;
         const setup = () => {
             render(<SingUpPage/>);
-            const usernameInput = screen.getByLabelText("Username");
-            const emailInput = screen.getByLabelText("E-mail");
+            usernameInput = screen.getByLabelText("Username");
+            emailInput = screen.getByLabelText("E-mail");
             passwordInput = screen.getByLabelText("Password");
             passwordRepeatInput = screen.getByLabelText("Password Repeat");
             userEvent.type(usernameInput, "user1");
@@ -193,7 +193,20 @@ describe('Sing Up Page', () => {
             userEvent.type(passwordRepeatInput, "AnotherP4ssword");
             const validationError = screen.queryByText("Password mismatch");
             expect(validationError).toBeInTheDocument();
-        })
+        });
+        it.each`
+        field         | message                      | label
+        ${'username'} | ${'Username cannot be null'} | ${'Username'}
+        ${'email'}    | ${'E-mail cannot be null'}   | ${'E-mail'}
+        ${'password'} | ${'Password cannot be null'} | ${'Password'}
+        `("clears validation error after $field field is update", async ({field, message, label}) => {
+            server.use(generateValidationError(field, message));
+            setup();
+            userEvent.click(button);
+            const validationError = await screen.findByText(message);
+            userEvent.type(screen.getByLabelText(label), "updated");
+            expect(validationError).not.toBeInTheDocument();
+        });
 
     });
 });

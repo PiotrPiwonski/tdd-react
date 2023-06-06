@@ -17,8 +17,11 @@ class SingUpPage extends Component {
 
     onChange = (event) => {
         const {id, value} = event.target;
+        const errorsCopy = {...this.state.errors};
+        delete errorsCopy[id];
         this.setState({
             [id]: value,
+            errors: errorsCopy
         });
     };
 
