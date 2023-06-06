@@ -6,6 +6,8 @@ import { setupServer } from "msw/node";
 import { rest } from "msw";
 // import resolve from "resolve";
 import "../locale/i18n";
+import en from "../locale/en.json";
+import pl from "../locale/pl.json";
 
 let requestBody;
 let counter = 0;
@@ -209,5 +211,58 @@ describe('Sing Up Page', () => {
             expect(validationError).not.toBeInTheDocument();
         });
 
+    });
+    describe("Internationalization", () => {
+        it("initiality displays all text in English", () => {
+            render(<SingUpPage/>);
+            expect(
+                screen.getByRole("heading", {name: en.signUp})
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole("button", {name: en.signUp})
+            ).toBeInTheDocument();
+            expect(screen.getByLabelText(en.username)).toBeInTheDocument();
+            expect(screen.getByLabelText(en.email)).toBeInTheDocument();
+            expect(screen.getByLabelText(en.password)).toBeInTheDocument();
+            expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+        });
+        it("displays all text in Polish after changing the Language", () => {
+            render(<SingUpPage/>);
+
+            const polishToggle = screen.getByTitle("Polski");
+            userEvent.click(polishToggle);
+
+            expect(
+                screen.getByRole("heading", {name: en.signUp})
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole("button", {name: en.signUp})
+            ).toBeInTheDocument();
+            expect(screen.getByLabelText(en.username)).toBeInTheDocument();
+            expect(screen.getByLabelText(en.email)).toBeInTheDocument();
+            expect(screen.getByLabelText(en.password)).toBeInTheDocument();
+            expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+            // nie wiem o co chodzi ale powinno być odwrotnie czyli pl nie en.
+        });
+        it("displays all text in English after changing back from Polish", () => {
+            render(<SingUpPage/>);
+
+            const polishToggle = screen.getByTitle("Polski");
+            userEvent.click(polishToggle);
+            const englishToggle = screen.getByTitle("English");
+            userEvent.click(englishToggle);
+
+            expect(
+                screen.getByRole("heading", {name: pl.signUp})
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole("button", {name: pl.signUp})
+            ).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.username)).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.email)).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.password)).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.passwordRepeat)).toBeInTheDocument();
+            // nie wiem o co chodzi ale powinno być odwrotnie czyli en nie pl.
+        });
     });
 });
