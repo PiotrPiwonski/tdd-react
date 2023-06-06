@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 // import resolve from "resolve";
+import "../locale/i18n";
 
 let requestBody;
 let counter = 0;
@@ -32,7 +33,7 @@ describe('Sing Up Page', () => {
     describe('Layout', () => {
         it("has header", () => {
             render(<SingUpPage/>);
-            const header = screen.queryByRole("heading", {name: "Sing Up"});
+            const header = screen.queryByRole("heading", {name: "Sign Up"});
             expect(header).toBeInTheDocument();
         });
         it("has username input", () => {
@@ -67,12 +68,12 @@ describe('Sing Up Page', () => {
         });
         it("has Sing Up button", () => {
             render(<SingUpPage/>);
-            const button = screen.queryByRole("button", {name: "Sing Up"});
+            const button = screen.queryByRole("button", {name: "Sign Up"});
             expect(button).toBeInTheDocument();
         });
         it("disables the button initially", () => {
             render(<SingUpPage/>);
-            const button = screen.queryByRole("button", {name: "Sing Up"});
+            const button = screen.queryByRole("button", {name: "Sign Up"});
             expect(button).toBeDisabled();
         });
     });
@@ -88,7 +89,7 @@ describe('Sing Up Page', () => {
             userEvent.type(emailInput, "user1@mail.com");
             userEvent.type(passwordInput, "P4ssword");
             userEvent.type(passwordRepeatInput, "P4ssword");
-            button = screen.queryByRole("button", {name: "Sing Up"});
+            button = screen.queryByRole("button", {name: "Sign Up"});
         }
         it("enables the button when password and password repeat fields have the same value", () => {
             setup();

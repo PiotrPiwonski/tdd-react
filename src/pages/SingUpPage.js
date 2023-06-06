@@ -1,7 +1,7 @@
 import React, { Component} from "react";
 import axios from "axios";
 import Input from "../components/input";
-
+import { withTranslation } from "react-i18next";
 
 class SingUpPage extends Component {
 
@@ -54,6 +54,7 @@ class SingUpPage extends Component {
         // });
     };
     render() {
+        const { t } = this.props
         let disabled = true;
         const {password, passwordRepeat, apiProgress, singUpSuccess, errors} = this.state;
         if (password && passwordRepeat) {
@@ -65,31 +66,31 @@ class SingUpPage extends Component {
            <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
                {!singUpSuccess && (<form className="card mt-5" data-testid="form-sing-up">
                    <div className="card-header">
-                       <h1 className="text-center">Sing Up</h1>
+                       <h1 className="text-center">{t('signUp')}</h1>
                    </div>
                    <div className="card-body">
                        <Input
                            id="username"
-                           label="Username"
+                           label={t('username')}
                            onChange={this.onChange}
                            help={errors.username}
                        />
                        <Input
                            id="email"
-                           label="E-mail"
+                           label={t('email')}
                            onChange={this.onChange}
                            help={errors.email}
                        />
                        <Input
                            id="password"
-                           label="Password"
+                           label={t('password')}
                            onChange={this.onChange}
                            help={errors.password}
                            type="password"
                        />
                        <Input
                            id="passwordRepeat"
-                           label="Password Repeat"
+                           label={t('passwordRepeat')}
                            onChange={this.onChange}
                            help={passwordMismatch}
                            type="password"
@@ -105,7 +106,7 @@ class SingUpPage extends Component {
                                    className="spinner-border spinner-border-sm"
                                    role="status"
                                ></span>)}
-                               Sing Up
+                               {t('signUp')}
                            </button>
                        </div>
                    </div>
@@ -120,4 +121,6 @@ class SingUpPage extends Component {
     }
 }
 
-export default SingUpPage;
+const SingUpPageWithTranslation = withTranslation()(SingUpPage);
+
+export default SingUpPageWithTranslation;
