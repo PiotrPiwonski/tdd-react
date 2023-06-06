@@ -17,7 +17,7 @@ const server = setupServer(
     rest.post('/api/1.0/users', (req, res, ctx) => {
         requestBody = req.body;
         counter += 1;
-        // acceptLanguageHeader = req.headers.get('Accept-Language');
+        acceptLanguageHeader = req.headers.get('Accept-Language');
         return res(ctx.status(200));
     })
 );
@@ -214,7 +214,7 @@ describe('Sing Up Page', () => {
 
     });
     describe("Internationalization", () => {
-        let polishToggle, englishToggle;
+        let polishToggle, englishToggle, passwordInput, passwordRepeatInput;
         const setup = () => {
             render(
                 <>
@@ -224,6 +224,8 @@ describe('Sing Up Page', () => {
             );
             polishToggle = screen.getByTitle("Polski");
             englishToggle = screen.getByTitle("English");
+            passwordInput = screen.getByLabelText('Password');
+            passwordRepeatInput = screen.getByLabelText('Password Repeat');
         };
 
         afterEach(() => {
@@ -283,10 +285,30 @@ describe('Sing Up Page', () => {
 
             await userEvent.click(polishToggle);
 
-            const passwordInput = screen.getByLabelText(pl.password);
             await userEvent.type(passwordInput, "P4ss");
             const validationMessageInPolish = screen.queryByText(pl.passwordMismatchValidation);
             expect(validationMessageInPolish).toBeInTheDocument();
+        });
+        it("sends accept language header as en for outgoing request", async() => {
+            setup();
+            await userEvent.type(passwordInput, "P4ssword");
+            await userEvent.type(passwordRepeatInput, "P4ssword");
+            const button = screen.getByRole("button", {name: en.signUp});
+            const form = screen.queryByTestId('form-sing-up');
+            await userEvent.click(button);
+            await waitForElementToBeRemoved(form);
+            expect(acceptLanguageHeader).toBe('en');
+        });
+        it("sends accept language header as pl for outgoing request after selecting that language", async() => {
+            setup();
+            await userEvent.type(passwordInput, "P4ssword");
+            await userEvent.type(passwordRepeatInput, "P4ssword");
+            const button = screen.getByRole("button", {name: en.signUp});
+            await userEvent.click(polishToggle);
+            const form = screen.queryByTestId('form-sing-up');
+            await userEvent.click(button);
+            await waitForElementToBeRemoved(form);
+            expect(acceptLanguageHeader).toBe('pl');
         });
     });
 });
