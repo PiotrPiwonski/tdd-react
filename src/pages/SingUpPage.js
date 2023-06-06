@@ -53,6 +53,8 @@ class SingUpPage extends Component {
         //     body: JSON.stringify(body),
         // });
     };
+
+
     render() {
         const { t } = this.props
         let disabled = true;
@@ -116,6 +118,18 @@ class SingUpPage extends Component {
                    Please check your e-mail to activate your account
                </div>
                )}
+               <img
+                   src="https://flagsapi.com/PL/flat/24.png"
+                   title="Polski"
+                   onClick={() => this.props.i18n.changeLanguage('pl')}
+                   alt="Polish flag"
+               />
+               <img
+                   src="https://flagsapi.com/GB/flat/24.png"
+                   title="English"
+                   onClick={() => this.props.i18n.changeLanguage('en')}
+                   alt="English flag"
+               />
            </div>
         )
     }
