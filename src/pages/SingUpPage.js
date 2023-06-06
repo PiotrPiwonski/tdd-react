@@ -35,7 +35,11 @@ class SingUpPage extends Component {
         };
         this.setState({apiProgress: true});
         try {
-            await axios.post('/api/1.0/users', body);
+            await axios.post('/api/1.0/users', body, {
+                headers: {
+                    "Accept-Language": this.props.i18n.language
+                }
+            });
             this.setState({singUpSuccess: true});
         } catch (err) {
             if (err.response.status === 400) {
@@ -66,7 +70,8 @@ class SingUpPage extends Component {
         let passwordMismatch = password !== passwordRepeat ? t('passwordMismatchValidation') : "";
         return (
            <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
-               {!singUpSuccess && (<form className="card mt-5" data-testid="form-sing-up">
+               {!singUpSuccess && (
+                   <form className="card mt-5" data-testid="form-sing-up">
                    <div className="card-header">
                        <h1 className="text-center">{t('signUp')}</h1>
                    </div>
