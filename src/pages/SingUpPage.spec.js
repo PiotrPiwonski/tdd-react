@@ -214,7 +214,7 @@ describe('Sing Up Page', () => {
 
     });
     describe("Internationalization", () => {
-
+        let polishToggle, englishToggle;
         const setup = () => {
             render(
                 <>
@@ -222,13 +222,15 @@ describe('Sing Up Page', () => {
                     <LanguageSelector/>
                 </>
             );
-        }
+            polishToggle = screen.getByTitle("Polski");
+            englishToggle = screen.getByTitle("English");
+        };
 
         afterEach(() => {
             act(() => {
                 i18n.changeLanguage("en");
-            })
-        })
+            });
+        });
 
         it("initiality displays all text in English", () => {
             setup();
@@ -243,31 +245,27 @@ describe('Sing Up Page', () => {
             expect(screen.getByLabelText(en.password)).toBeInTheDocument();
             expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
         });
-        it("displays all text in Polish after changing the Language", () => {
-            setup();
+        it("displays all text in Polish after changing the Language", async () => {
+            await setup();
 
-            const polishToggle = screen.getByTitle("Polski");
-            userEvent.click(polishToggle);
+            await userEvent.click(polishToggle);
 
             expect(
-                screen.getByRole("heading", {name: en.signUp})
+                screen.getByRole("heading", {name: pl.signUp})
             ).toBeInTheDocument();
             expect(
-                screen.getByRole("button", {name: en.signUp})
+                screen.getByRole("button", {name: pl.signUp})
             ).toBeInTheDocument();
-            expect(screen.getByLabelText(en.username)).toBeInTheDocument();
-            expect(screen.getByLabelText(en.email)).toBeInTheDocument();
-            expect(screen.getByLabelText(en.password)).toBeInTheDocument();
-            expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
-            // nie wiem o co chodzi ale powinno być odwrotnie czyli pl nie en.
+            expect(screen.getByLabelText(pl.username)).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.email)).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.password)).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.passwordRepeat)).toBeInTheDocument();
         });
-        it("displays all text in English after changing back from Polish", () => {
-            setup();
+        it("displays all text in English after changing back from Polish", async () => {
+            await setup();
 
-            const polishToggle = screen.getByTitle("Polski");
-            userEvent.click(polishToggle);
-            const englishToggle = screen.getByTitle("English");
-            userEvent.click(englishToggle);
+            await userEvent.click(polishToggle);
+            await userEvent.click(englishToggle);
 
             expect(
                 screen.getByRole("heading", {name: en.signUp})
@@ -279,6 +277,16 @@ describe('Sing Up Page', () => {
             expect(screen.getByLabelText(en.email)).toBeInTheDocument();
             expect(screen.getByLabelText(en.password)).toBeInTheDocument();
             expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+        });
+        it("displays password mismatch validation in Polish", async ()=> {
+            await setup();
+
+            await userEvent.click(polishToggle);
+
+            const passwordInput = screen.getByLabelText(pl.password);
+            await userEvent.type(passwordInput, "P4ss");
+            const validationMessageInPolish = screen.queryByText(pl.passwordMismatchValidation);
+            expect(validationMessageInPolish).toBeInTheDocument();
         });
     });
 });
