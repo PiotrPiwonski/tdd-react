@@ -1,7 +1,7 @@
 import React, { Component} from "react";
-import axios from "axios";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
+import {signUp} from "../api/apiCalls";
 
 class SingUpPage extends Component {
 
@@ -35,11 +35,7 @@ class SingUpPage extends Component {
         };
         this.setState({apiProgress: true});
         try {
-            await axios.post('/api/1.0/users', body, {
-                headers: {
-                    "Accept-Language": this.props.i18n.language
-                }
-            });
+            await signUp(body);
             this.setState({singUpSuccess: true});
         } catch (err) {
             if (err.response.status === 400) {
