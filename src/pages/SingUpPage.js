@@ -65,7 +65,10 @@ class SingUpPage extends Component {
 
         let passwordMismatch = password !== passwordRepeat ? t('passwordMismatchValidation') : "";
         return (
-           <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+           <div
+               className="col-lg-6 offset-lg-3 col-md-8 offset-md-2"
+               data-testid="signup-page"
+           >
                {!singUpSuccess && (
                    <form className="card mt-5" data-testid="form-sing-up">
                    <div className="card-header">
