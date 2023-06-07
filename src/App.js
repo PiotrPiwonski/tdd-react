@@ -4,59 +4,48 @@ import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import LanguageSelector from "./components/LanguageSelector";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import logo from "./assets/hoaxify.png";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 function App() {
     const { t } = useTranslation();
 
-    const [path, setPath] = useState(window.location.pathname);
-
-    const onClickLink = (event) => {
-        event.preventDefault();
-        const path = event.currentTarget.attributes.href.value;
-        window.history.pushState({}, "", path);
-        setPath(path);
-    }
-
   return (
-      <>
+      <Router>
           <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
               <div className="container">
-                  <a
-                      href="/" title="Home"
-                      onClick={onClickLink}
+                  <Link
+                      to="/"
+                      title="Home"
                       className="navbar-brand"
                   >
                       <img src={logo} alt="logo" width="60"/>
                       Home
-                  </a>
+                  </Link>
                   <ul className="navbar-nav">
-                      <a
-                          href="/signup"
-                          onClick={onClickLink}
+                      <Link
+                          to="/signup"
                           className="nav-link"
                       >
                           {t('signUp')}
-                      </a>
-                      <a
-                          href="/login"
-                          onClick={onClickLink}
+                      </Link>
+                      <Link
+                          to="/login"
                           className="nav-link"
                       >
                           Login
-                      </a>
+                      </Link>
                   </ul>
               </div>
           </nav>
           <div className="container">
-              {path === '/' && <HomePage/>}
-              {path === '/signup' && <SingUpPage/>}
-              {path === '/login' && <LoginPage/>}
-              {path.startsWith('/user/') && <UserPage/>}
+              <Route exact path="/" component={HomePage}/>
+              <Route path="/signup" component={SingUpPage}/>
+              <Route path="/login" component={LoginPage}/>
+              <Route path="/user/:id" component={UserPage}/>
               <LanguageSelector/>
           </div>
-      </>
+      </Router>
 
 
   );
