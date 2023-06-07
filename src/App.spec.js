@@ -44,7 +44,7 @@ describe("Routing", () => {
 
     it.each`
     targetPage
-    ${'Home'}
+    ${'logo Home'}
     ${'Sign Up'}
     ${'Login'}
     `("has link to $targetPage on NavBar", ({targetPage}) => {
@@ -56,8 +56,8 @@ describe("Routing", () => {
     it.each`
     initialPath | clickingTo  | visiblePage
     ${'/'}      | ${'Sign Up'}| ${'signup-page'}
-    ${'/signup'}| ${'Home'}   | ${'home-page'}
-    ${'/login'}| ${'Login'}   | ${'login-page'}
+    ${'/signup'}| ${'logo Home'}   | ${'home-page'}
+    ${'/signup'}| ${'Login'}   | ${'login-page'}
     `("displays $visiblePage afer clicking $clickingTo ", async ({initialPath, clickingTo, visiblePage}) => {
         setup(initialPath);
         const link = screen.getByRole('link', {name: clickingTo});
@@ -65,4 +65,10 @@ describe("Routing", () => {
         expect(screen.getByTestId(visiblePage)).toBeInTheDocument();
     });
 
+    it('displays home page when clicking brand logo',  async () => {
+        setup('/login');
+        const logo = screen.queryByAltText("logo");
+        await userEvent.click(logo);
+        expect(screen.getByTestId('home-page')).toBeInTheDocument();
+    });
 });
