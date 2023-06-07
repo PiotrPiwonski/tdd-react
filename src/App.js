@@ -5,6 +5,7 @@ import UserPage from "./pages/UserPage";
 import LanguageSelector from "./components/LanguageSelector";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import logo from "./assets/hoaxify.png";
 
 function App() {
     const { t } = useTranslation();
@@ -13,30 +14,50 @@ function App() {
 
     const onClickLink = (event) => {
         event.preventDefault();
-        const path = event.target.attributes.href.value;
+        const path = event.currentTarget.attributes.href.value;
         window.history.pushState({}, "", path);
         setPath(path);
     }
 
   return (
-      <div className="container">
-          <div>
-              <a href="/" title="Home" onClick={onClickLink}>
-                  Home
-              </a>
-              <a href="/signup" onClick={onClickLink}>
-                  {t('signUp')}
-              </a>
-              <a href="/login" onClick={onClickLink}>
-                  Login
-              </a>
+      <>
+          <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
+              <div className="container">
+                  <a
+                      href="/" title="Home"
+                      onClick={onClickLink}
+                      className="navbar-brand"
+                  >
+                      <img src={logo} alt="logo" width="60"/>
+                      Home
+                  </a>
+                  <ul className="navbar-nav">
+                      <a
+                          href="/signup"
+                          onClick={onClickLink}
+                          className="nav-link"
+                      >
+                          {t('signUp')}
+                      </a>
+                      <a
+                          href="/login"
+                          onClick={onClickLink}
+                          className="nav-link"
+                      >
+                          Login
+                      </a>
+                  </ul>
+              </div>
+          </nav>
+          <div className="container">
+              {path === '/' && <HomePage/>}
+              {path === '/signup' && <SingUpPage/>}
+              {path === '/login' && <LoginPage/>}
+              {path.startsWith('/user/') && <UserPage/>}
+              <LanguageSelector/>
           </div>
-          {path === '/' && <HomePage/>}
-          {path === '/signup' && <SingUpPage/>}
-          {path === '/login' && <LoginPage/>}
-          {path.startsWith('/user/') && <UserPage/>}
-        <LanguageSelector/>
-      </div>
+      </>
+
 
   );
 }
