@@ -2,6 +2,8 @@ import React, { Component} from "react";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 import {signUp} from "../api/apiCalls";
+import Alert from "../components/Alert";
+import Spinner from "../components/Spinner";
 
 class SingUpPage extends Component {
 
@@ -70,7 +72,7 @@ class SingUpPage extends Component {
                data-testid="signup-page"
            >
                {!singUpSuccess && (
-                   <form className="card mt-5" data-testid="form-sing-up">
+                   <form className="card" data-testid="form-sing-up">
                    <div className="card-header">
                        <h1 className="text-center">{t('signUp')}</h1>
                    </div>
@@ -108,19 +110,17 @@ class SingUpPage extends Component {
                                onClick={this.submit}
                            >
                                {apiProgress && (
-                               <span
-                                   className="spinner-border spinner-border-sm"
-                                   role="status"
-                               ></span>)}
+                                    <Spinner/>
+                                   )}
                                {t('signUp')}
                            </button>
                        </div>
                    </div>
                </form>)}
                {singUpSuccess && (
-                   <div className="alert alert-success mt-3">
-                   Please check your e-mail to activate your account
-               </div>
+                   <Alert>
+                       Please check your e-mail to activate your account
+                   </Alert>
                )}
            </div>
         )
