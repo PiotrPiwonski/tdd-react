@@ -2,15 +2,16 @@ import {render, screen} from "@testing-library/react";
 import AccountActivationPage from "./AccountActivationPage";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import async from "async";
 
 
 let counter = 0;
 const server = setupServer(
     rest.post('/api/1.0/users/token/:token', (req, res, ctx) => {
+        counter += 1;
         if (req.params.token === '5678') {
             return res(ctx.status(400));
         }
-        counter += 1;
         return res(ctx.status(200));
     })
 );
@@ -44,5 +45,14 @@ describe("Account Activation Page", () => {
         setup('5678');
         const message = await screen.findByText("Activation failure");
         expect(message).toBeInTheDocument();
-    })
+    });
+    it("sends activation request after the token change", async () => {
+        const match = {params: {token: "1234"}};
+        const { rerender } = render(<AccountActivationPage match={match}/>);
+        await screen.findByText("Account is activated");
+        match.params.token  = "5678";
+        rerender(<AccountActivationPage match={match}/>);
+        await screen.findByText("Activation failure");
+        expect(counter).toBe(2);
+    });
 });
