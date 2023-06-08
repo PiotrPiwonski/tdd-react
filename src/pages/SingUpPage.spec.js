@@ -312,3 +312,5 @@ describe('Sing Up Page', () => {
         });
     });
 });
+
+console.error = () => {};
