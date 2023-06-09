@@ -8,12 +8,16 @@ const AccountActivationPage = (props) => {
     const [result, setResult] = useState();
 
     useEffect(() => {
-        setResult();
-        activate(props.match.params.token).then(() => {
-            setResult("success");
-        }).catch(() => {
-            setResult("fail");
-        })
+        async function activateRequest() {
+            setResult();
+            try {
+                await activate(props.match.params.token);
+                    setResult("success");
+            } catch (error) {
+                setResult("fail");
+            }
+        }
+        activateRequest();
     }, [props.match.params.token]);
 
     let content = (
