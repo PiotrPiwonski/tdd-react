@@ -3,8 +3,7 @@ import UserList from "./UserList";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 
-const page1 ={
-    "content": [
+const users =[
     {
         "id": 1,
         "username": "user1",
@@ -19,16 +18,53 @@ const page1 ={
         "id": 3,
         "username": "user3",
         "email": "user3@mail.com"
+    },
+    {
+        "id": 4,
+        "username": "user4",
+        "email": "user4@mail.com"
+    },
+    {
+        "id": 5,
+        "username": "user5",
+        "email": "user5@mail.com"
+    },
+    {
+        "id": 6,
+        "username": "user6",
+        "email": "user6@mail.com"
+    },
+    {
+        "id": 7,
+        "username": "user7",
+        "email": "user7@mail.com"
     }
-],
-    "page": 0,
-    "size": 3,
-    "totalPages": 9
+];
+
+const getPage = (page, size) => {
+    let start = page * size;
+    let end = start + size;
+    let totalPages = Math.ceil(users.length / size);
+
+    return {
+        content: users.slice(start, end),
+        page: page,
+        size: size,
+        totalPages: totalPages
+    }
 }
 
 const server = setupServer(
     rest.get('/api/1.0/users', (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json(page1));
+        let page = Number.parseInt(req.url.searchParams.get('page'));
+        let size = Number.parseInt(req.url.searchParams.get('size'));
+        if(Number.isNaN(page)) {
+            page = 0;
+        }
+        if(Number.isNaN(size)) {
+            size = 5;
+        }
+        return res(ctx.status(200), ctx.json(getPage(page, size)));
     })
 );
 
