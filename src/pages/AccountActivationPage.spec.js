@@ -2,8 +2,6 @@ import {render, screen} from "@testing-library/react";
 import AccountActivationPage from "./AccountActivationPage";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import async from "async";
-
 
 let counter = 0;
 const server = setupServer(
