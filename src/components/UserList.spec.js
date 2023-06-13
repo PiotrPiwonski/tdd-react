@@ -117,10 +117,10 @@ describe("User List", () => {
             setup();
             await screen.findByText('user1');
             const nextPageLink =screen.queryByText('next >');
-            userEvent.click(nextPageLink);
+            await userEvent.click(nextPageLink);
             await screen.findByText('user4');
-            userEvent.click(nextPageLink);
-            await screen.findByText('user7');
+            await userEvent.click(nextPageLink);
+            await screen.findByText('user6');
             expect(nextPageLink).not.toBeInTheDocument();
         });
         it("does not display the previous page link in first page", async () => {
@@ -149,6 +149,12 @@ describe("User List", () => {
             const firstUserOnFirsPage = await screen.findByText('user1');
             expect(firstUserOnFirsPage).toBeInTheDocument();
         });
+        it("display spinner during the api call is in progress", async () => {
+            setup();
+            const spinner = screen.getByRole('status');
+            await screen.findByText('user1');
+            expect(spinner).not.toBeInTheDocument();
+        });
     });
     describe("Internationalization", () => {
         beforeEach(() => {
@@ -176,3 +182,5 @@ describe("User List", () => {
     });
 
 });
+
+console.error = () => {};
