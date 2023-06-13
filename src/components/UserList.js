@@ -2,6 +2,7 @@ import {Component} from "react";
 import {loadUsers} from "../api/apiCalls";
 import UserListItem from "./UserListItem";
 import { withTranslation} from "react-i18next";
+import Spinner from "./Spinner";
 
 class UserList extends Component {
 
@@ -11,7 +12,8 @@ class UserList extends Component {
             page: 0,
             size: 0,
             totalPages: 0
-        }
+        },
+        pendingApiCall: false
     };
 
     componentDidMount() {
@@ -19,17 +21,20 @@ class UserList extends Component {
     };
 
     loadData = async (pageIndex) => {
+        this.setState({pendingApiCall: true});
         try {
             const response = await loadUsers(pageIndex);
             this.setState({page: response.data});
         }catch(error) {
 
         }
+        this.setState({pendingApiCall: false});
 
     };
 
     render() {
         const { t } = this.props;
+        const { pendingApiCall } = this.state;
         const { totalPages, page, content } = this.state.page;
 
         return (
@@ -44,23 +49,24 @@ class UserList extends Component {
                         )
                     })}
                 </ul>
-                <div className="card-footer">
-                    {page !== 0 &&
+                <div className="card-footer text-center">
+                    {page !== 0 && !pendingApiCall && (
                         <button
-                            className="btn btn-outline-secondary btn-sm"
+                            className="btn btn-outline-secondary btn-sm float-start"
                             onClick={() => this.loadData(page - 1)}
                         >
                             { t('previousPage')}
                         </button>
-                    }
-                    {totalPages > page + 1 &&
+                        )}
+                    {totalPages > page + 1 && !pendingApiCall && (
                         <button
-                            className="btn btn-outline-secondary btn-sm"
+                            className="btn btn-outline-secondary btn-sm float-end"
                             onClick={() => this.loadData(page + 1)}
                         >
                             { t('nextPage')}
                         </button>
-                    }
+                    )}
+                    {pendingApiCall && (<Spinner/>)}
                 </div>
 
             </div>
