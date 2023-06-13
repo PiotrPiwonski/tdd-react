@@ -1,11 +1,10 @@
 import SingUpPage from './SingUpPage';
-import {render, screen, waitFor, act, waitForElementToBeRemoved} from '@testing-library/react';
+import {render, screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 // import axios from "axios";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 // import resolve from "resolve";
-import i18n from "../locale/i18n";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
 import LanguageSelector from "../components/LanguageSelector";
@@ -228,11 +227,7 @@ describe('Sing Up Page', () => {
             passwordRepeatInput = screen.getByLabelText('Password Repeat');
         };
 
-        afterEach(() => {
-            act(() => {
-                i18n.changeLanguage("en");
-            });
-        });
+
 
         it("initiality displays all text in English", () => {
             setup();

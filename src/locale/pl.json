@@ -4,5 +4,8 @@
   "email": "E-mail",
   "password": "Hasło",
   "passwordRepeat": "Powtórz Hasło",
-  "passwordMismatchValidation": "Hasło różni się"
+  "passwordMismatchValidation": "Hasło różni się",
+  "users": "Użytkownicy",
+  "nextPage": "następna >",
+  "previousPage": "< poprzednia"
 }
