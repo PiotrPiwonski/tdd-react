@@ -38,7 +38,7 @@ class UserList extends Component {
                 <ul className="list-group list-group-flush">
                     {content.map((user) => {
                         return (
-                            <UserListItem user={user}/>
+                            <UserListItem key={user.id} user={user}/>
                         )
                     })}
                 </ul>
