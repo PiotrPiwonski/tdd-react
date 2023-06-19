@@ -1,8 +1,13 @@
 import Input from "../components/Input";
 import Alert from "../components/Alert";
-import React from "react";
+import React, {useState} from "react";
 
 const LoginPage = () => {
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+
+    let disabled = !(email && password);
+
     return (
     <div
         className="col-lg-6 offset-lg-3 col-md-8 offset-md-2"
@@ -16,16 +21,18 @@ const LoginPage = () => {
                     <Input
                         id="email"
                         label="E-mail"
+                        onChange={(event) => setEmail(event.target.value)}
                     />
                     <Input
                         id="password"
                         label="Password"
                         type="password"
+                        onChange={(event) => setPassword(event.target.value)}
                     />
                     <div className="text-center">
                         <button
                             className="btn btn-primary"
-                            disabled
+                            disabled={disabled}
                         >
                             Login
                         </button>
