@@ -1,6 +1,6 @@
 import Input from "../components/Input";
 import Alert from "../components/Alert";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { login } from "../api/apiCalls";
 import Spinner from "../components/Spinner";
 
@@ -8,13 +8,20 @@ const LoginPage = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [apiProgress, setApiProgress] = useState(false);
+    const [failMessage, setFailMessage] = useState();
+
+    useEffect(() => {
+        setFailMessage();
+    }, [email, password]);
 
     const submit = async (event) => {
         event.preventDefault();
         setApiProgress(true);
         try {
             await login({email, password});
-        } catch (error) {}
+        } catch (error) {
+            setFailMessage(error.response.data.message);
+        }
         setApiProgress(false);
     }
 
@@ -33,14 +40,25 @@ const LoginPage = () => {
                     <Input
                         id="email"
                         label="E-mail"
-                        onChange={(event) => setEmail(event.target.value)}
+                        onChange={(event) => {
+                            setEmail(event.target.value);
+                            setFailMessage();
+                        }}
                     />
                     <Input
                         id="password"
                         label="Password"
                         type="password"
-                        onChange={(event) => setPassword(event.target.value)}
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                            setFailMessage();
+                        }}
                     />
+                    {failMessage &&
+                        <Alert type="danger">
+                            {failMessage}
+                        </Alert>
+                    }
                     <div className="text-center">
                         <button
                             className="btn btn-primary"
@@ -53,9 +71,6 @@ const LoginPage = () => {
                     </div>
                 </div>
             </form>
-            <Alert>
-                Please check your e-mail to activate your account
-            </Alert>
     </div>
     )
 }
