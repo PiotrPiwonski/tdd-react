@@ -7,5 +7,6 @@
   "passwordMismatchValidation": "Hasło różni się",
   "users": "Użytkownicy",
   "nextPage": "następna >",
-  "previousPage": "< poprzednia"
+  "previousPage": "< poprzednia",
+  "login": "Logowanie"
 }

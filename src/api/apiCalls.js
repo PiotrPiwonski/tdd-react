@@ -1,13 +1,13 @@
 import axios from "axios";
 import i18n from "../locale/i18n";
-import async from "async";
+
+axios.interceptors.request.use((request) => {
+    request.headers["Accept-Language"] = i18n.language;
+    return request;
+});
 
 export const signUp = async (body) => {
-    return await axios.post('/api/1.0/users', body, {
-        headers: {
-            "Accept-Language": i18n.language
-        }
-    });
+    return await axios.post('/api/1.0/users', body);
 };
 
 export const activate = (token) => {

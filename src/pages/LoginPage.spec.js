@@ -3,12 +3,16 @@ import LoginPage from "./LoginPage";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import LanguageSelector from "../components/LanguageSelector";
+import en from "../locale/en.json";
+import pl from "../locale/pl.json";
 
-let requestBody, count = 0;
+let requestBody, count = 0, acceptLanguageHeader;
 const server = setupServer(
     rest.post('/api/1.0/auth', (req, res, ctx) => {
         requestBody = req.body;
         count += 1;
+        acceptLanguageHeader = req.headers.get('Accept-Language');
         return res(ctx.status(401), ctx.json({message: 'Incorrect credentials'}));
     })
 );
@@ -114,6 +118,68 @@ describe("LoginPage", () => {
             const errorMessage = await screen.findByText("Incorrect credentials");
             await userEvent.type(passwordInput, "newP4ssword");
             expect(errorMessage).not.toBeInTheDocument();
+        });
+    });
+    describe("Internationalization", () => {
+        let polishToggle, englishToggle;
+        const setup = () => {
+            render(
+                <>
+                    <LoginPage/>
+                    <LanguageSelector/>
+                </>
+            );
+            polishToggle = screen.getByTitle("Polski");
+            englishToggle = screen.getByTitle("English");
+        };
+        it("initiality displays all text in English", () => {
+            setup();
+            expect(
+                screen.getByRole("heading", {name: en.login})
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole("button", {name: en.login})
+            ).toBeInTheDocument();
+            expect(screen.getByLabelText(en.email)).toBeInTheDocument();
+            expect(screen.getByLabelText(en.password)).toBeInTheDocument();
+        });
+        it("displays all text in Polish after changing the Language", async () => {
+            await setup();
+            await userEvent.click(polishToggle);
+
+            expect(
+                screen.getByRole("heading", {name: pl.login})
+            ).toBeInTheDocument();
+            expect(
+                screen.getByRole("button", {name: pl.login})
+            ).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.email)).toBeInTheDocument();
+            expect(screen.getByLabelText(pl.password)).toBeInTheDocument();
+        });
+        it("sets accept language header to en for outgoing request", async () => {
+            setup();
+            const emailInput = screen.getByLabelText("E-mail");
+            const passwordInput = screen.getByLabelText("Password");
+            await userEvent.type(emailInput, "user100@mail.com");
+            await userEvent.type(passwordInput, "P4ssword");
+            const button = screen.queryByRole("button", {name: "Login"});
+            await userEvent.click(button);
+            const spinner = screen.getByRole("status");
+            await waitForElementToBeRemoved(spinner);
+            expect(acceptLanguageHeader).toBe("en");
+        });
+        it("sets accept language header to pl for outgoing request", async () => {
+            setup();
+            const emailInput = screen.getByLabelText("E-mail");
+            const passwordInput = screen.getByLabelText("Password");
+            await userEvent.type(emailInput, "user100@mail.com");
+            await userEvent.type(passwordInput, "P4ssword");
+            const button = screen.queryByRole("button", {name: "Login"});
+            await userEvent.click(polishToggle);
+            await userEvent.click(button);
+            const spinner = screen.getByRole("status");
+            await waitForElementToBeRemoved(spinner);
+            expect(acceptLanguageHeader).toBe("pl");
         });
     });
 });
