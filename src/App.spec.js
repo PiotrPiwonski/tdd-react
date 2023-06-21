@@ -38,7 +38,10 @@ const server = setupServer(
         );
     }),
     rest.post('/api/1.0/auth', (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({username: "user5"}));
+        return res(ctx.status(200), ctx.json({
+            id: 5,
+            username: "user5"
+        }));
     })
 );
 
@@ -139,14 +142,45 @@ describe("Routing", () => {
 });
 
 describe('Login', () => {
-    it('redirects to homepage after successful login', async () => {
+    const setupLoggedIn = async () => {
         setup('/login');
         await userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
         await userEvent.type(screen.getByLabelText("Password"), "P4ssword");
         await userEvent.click(screen.getByRole("button", {name: "Login"}));
+    }
+    it('redirects to homepage after successful login', async () => {
+        await setupLoggedIn();
         const page = await screen.findByTestId("home-page");
         expect(page).toBeInTheDocument();
     });
+    it('hides login and singup from navbar after successful login', async () => {
+        await setupLoggedIn();
+        await screen.findByTestId("home-page");
+        const loginLink = screen.queryByRole("link", {name: "Login"});
+        const singUpLink = screen.queryByRole("link", {name: "Sing Up"});
+        expect(loginLink).not.toBeInTheDocument();
+        expect(singUpLink).not.toBeInTheDocument();
+    });
+    it('displays My Profile link on navbar after successful login', async () => {
+        setup('/login');
+        const myProfileLinkBeforeLogin = screen.queryByRole("link", {name: "My Profile"});
+        expect(myProfileLinkBeforeLogin).not.toBeInTheDocument();
+        await userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
+        await userEvent.type(screen.getByLabelText("Password"), "P4ssword");
+        await userEvent.click(screen.getByRole("button", {name: "Login"}));
+        await screen.findByTestId("home-page");
+        const myProfileLinkAfterLogin = screen.queryByRole("link", {name: "My Profile"});
+        expect(myProfileLinkAfterLogin).toBeInTheDocument();
+    });
+    it('displays user page with logged in user id in url after clicking My Profile link', async () => {
+        await setupLoggedIn();
+        await screen.findByTestId("home-page");
+        const myProfile = screen.queryByRole("link", {name: "My Profile"});
+        await userEvent.click(myProfile);
+        await screen.findByTestId("user-page");
+        const username = await screen.findByText("user5");
+        expect(username).toBeInTheDocument();
+    })
 });
 
 console.error = () => {};
