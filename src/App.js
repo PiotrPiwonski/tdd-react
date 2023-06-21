@@ -7,8 +7,13 @@ import LanguageSelector from "./components/LanguageSelector";
 import { useTranslation } from "react-i18next";
 import logo from "./assets/hoaxify.png";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {useState} from "react";
 
 function App() {
+    const [auth, setAuth] = useState({
+        isLoggedIn: false,
+        id:''
+    });
     const { t } = useTranslation();
 
   return (
@@ -24,6 +29,8 @@ function App() {
                       Home
                   </Link>
                   <ul className="navbar-nav">
+                      {!auth.isLoggedIn &&
+                      <>
                       <Link
                           to="/signup"
                           className="nav-link"
@@ -36,13 +43,27 @@ function App() {
                       >
                           Login
                       </Link>
+                      </>
+                      }
+                      {auth.isLoggedIn &&
+                      <Link
+                          to={`/user/${auth.id}`}
+                          className="nav-link"
+                      >
+                          My Profile
+                      </Link>
+                      }
                   </ul>
               </div>
           </nav>
           <div className="container pt-3">
               <Route exact path="/" component={HomePage}/>
               <Route path="/signup" component={SingUpPage}/>
-              <Route path="/login" component={LoginPage}/>
+              <Route path="/login" render={(reactRouterProps) => {
+                return <LoginPage
+                    {...reactRouterProps}
+                    onLoginSuccess={setAuth}/>;
+              }}/>
               <Route path="/user/:id" component={UserPage}/>
               <Route path="/activate/:token" component={AccountActivationPage}/>
               <LanguageSelector/>
