@@ -25,7 +25,10 @@ function App() {
                     {...reactRouterProps}
                     onLoginSuccess={setAuth}/>;
               }}/>
-              <Route path="/user/:id" component={UserPage}/>
+              <Route
+                  path="/user/:id"
+                  component={(reactRouterProps) => <UserPage {...reactRouterProps} auth={auth}/>}
+              />
               <Route path="/activate/:token" component={AccountActivationPage}/>
               <LanguageSelector/>
           </div>
