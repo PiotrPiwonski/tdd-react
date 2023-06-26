@@ -33,7 +33,7 @@ class UserPage extends Component {
             if (failResponse) {
                 content = <Alert type="danger" center>{failResponse}</Alert>
             } else {
-                content = <ProfileCard user={user} auth={this.props.auth}/>
+                content = <ProfileCard user={user} />
             }
         }
 
