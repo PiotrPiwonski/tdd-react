@@ -1,5 +1,5 @@
 import SingUpPage from './SingUpPage';
-import {render, screen, waitFor, waitForElementToBeRemoved} from '@testing-library/react';
+import {render, screen, waitFor, waitForElementToBeRemoved} from '../test/setup';
 import userEvent from "@testing-library/user-event";
 // import axios from "axios";
 import { setupServer } from "msw/node";
@@ -7,7 +7,6 @@ import { rest } from "msw";
 // import resolve from "resolve";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
-import LanguageSelector from "../components/LanguageSelector";
 
 let requestBody;
 let counter = 0;
@@ -215,20 +214,12 @@ describe('Sing Up Page', () => {
     describe("Internationalization", () => {
         let polishToggle, englishToggle, passwordInput, passwordRepeatInput;
         const setup = () => {
-            render(
-                <>
-                    <SingUpPage/>
-                    <LanguageSelector/>
-                </>
-            );
+            render(<SingUpPage/>);
             polishToggle = screen.getByTitle("Polski");
             englishToggle = screen.getByTitle("English");
             passwordInput = screen.getByLabelText('Password');
             passwordRepeatInput = screen.getByLabelText('Password Repeat');
         };
-
-
-
         it("initiality displays all text in English", () => {
             setup();
             expect(

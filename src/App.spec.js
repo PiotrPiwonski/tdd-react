@@ -1,9 +1,8 @@
-import { render, screen} from "@testing-library/react";
+import { render, screen} from "./test/setup";
 import App from "./App";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-
 
 const server = setupServer(
     rest.post('/api/1.0/users/token/:token', (req, res, ctx) => {
