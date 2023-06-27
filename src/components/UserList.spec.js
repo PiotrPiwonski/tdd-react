@@ -1,11 +1,9 @@
-import {render, screen} from "@testing-library/react";
+import {render, screen} from "../test/setup";
 import UserList from "./UserList";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter as Router } from "react-router-dom";
 import en from "../locale/en.json";
-import LanguageSelector from "./LanguageSelector";
 import pl from "../locale/pl.json";
 
 
@@ -83,12 +81,7 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 
 const setup = () => {
-    render(
-        <Router>
-            <UserList/>
-            <LanguageSelector/>
-        </Router>
-    );
+    render(<UserList/>);
 }
 
 describe("User List", () => {
