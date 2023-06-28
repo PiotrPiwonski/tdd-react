@@ -5,34 +5,12 @@ import reportWebVitals from './reportWebVitals';
 import "./locale/i18n";
 import {BrowserRouter as Router} from "react-router-dom";
 import {Provider} from "react-redux";
-import {createStore} from "redux";
-
-const reducer = (state, action) => {
-    if (action.type === "login-success") {
-        const newState = {...state}
-        newState.id = action.payload.id;
-        newState.isLoggedIn = true;
-        return newState;
-    }
-    console.log({state, action});
-    return state;
-};
-
-const initialState = {
-    isLoggedIn: false,
-    id:''
-};
-
-
-const store = createStore(
-    reducer,
-    initialState,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+import createAppStore from "./state/store";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Router>
-        <Provider store={store}>
+        <Provider store={createAppStore()}>
             <App />
         </Provider>
     </Router>
