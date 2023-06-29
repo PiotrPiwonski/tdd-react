@@ -5,6 +5,7 @@ import { setupServer } from "msw/node";
 import { rest } from "msw";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
+import storage from "../state/storage";
 
 let requestBody, count = 0, acceptLanguageHeader;
 const server = setupServer(
@@ -24,6 +25,18 @@ beforeEach(() => {
 beforeAll(() => server.listen());
 
 afterAll(() => server.close());
+
+const loginSuccess = rest.post('/api/1.0/auth', (req, res, ctx) => {
+    return res(
+        ctx.status(200),
+        ctx.json({
+            id: 5,
+            username: 'user5',
+            image: null,
+            token: 'abcdefgh'
+        })
+    );
+});
 
 
 describe("LoginPage", () => {
@@ -61,11 +74,11 @@ describe("LoginPage", () => {
     });
     describe("Interactions", () => {
         let button, emailInput, passwordInput;
-        const setup = () => {
+        const setup = (email = 'user100@mail.com') => {
             render(<LoginPage/>);
             emailInput = screen.getByLabelText("E-mail");
             passwordInput = screen.getByLabelText("Password");
-            userEvent.type(emailInput, "user100@mail.com");
+            userEvent.type(emailInput, email);
             userEvent.type(passwordInput, "P4ssword");
             button = screen.queryByRole("button", {name: "Login"});
         }
@@ -117,6 +130,27 @@ describe("LoginPage", () => {
             const errorMessage = await screen.findByText("Incorrect credentials");
             await userEvent.type(passwordInput, "newP4ssword");
             expect(errorMessage).not.toBeInTheDocument();
+        });
+        it('stores id, username and image in storage', async () => {
+            server.use(loginSuccess);
+            await setup('user5@mail.com');
+            await userEvent.click(button);
+            const spinner = screen.queryByRole("status");
+            await waitForElementToBeRemoved(spinner);
+            const storageState = storage.getItem('auth');
+            const objectFields = Object.keys(storageState);
+            expect(objectFields.includes('id')).toBeTruthy();
+            expect(objectFields.includes('username')).toBeTruthy();
+            expect(objectFields.includes('image')).toBeTruthy();
+        });
+        it('stores authorization header value in storage', async () => {
+            server.use(loginSuccess);
+            await setup('user5@mail.com');
+            await userEvent.click(button);
+            const spinner = screen.queryByRole("status");
+            await waitForElementToBeRemoved(spinner);
+            const storageState = storage.getItem('auth');
+            expect(storageState.header).toBe('Bearer abcdefgh');
         });
     });
     describe("Internationalization", () => {
