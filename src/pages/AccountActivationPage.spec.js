@@ -73,3 +73,5 @@ describe("Account Activation Page", () => {
         expect(spinner).not.toBeInTheDocument();
     });
 });
+
+console.error = () => {};
