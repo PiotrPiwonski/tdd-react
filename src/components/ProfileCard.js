@@ -20,6 +20,7 @@ const ProfileCard = (props) => {
         setApiProgress(true);
         try {
            await updateUser(id, {username: newUsername}, header);
+           setInEditMode(false);
         } catch (error) {}
         setApiProgress(false);
     }
@@ -31,7 +32,7 @@ const ProfileCard = (props) => {
                 <Input
                     label="Change your username"
                     id="username"
-                    initialValue={user.username}
+                    initialValue={newUsername}
                     onChange={(event) => setNewUsername(event.target.value)}
                 />
                 <ButtonWithProgress
@@ -49,7 +50,7 @@ const ProfileCard = (props) => {
     } else {
         content = (
             <>
-                <h3>{user.username}</h3>
+                <h3>{newUsername}</h3>
                 {
                     user.id === id &&
                     <button
