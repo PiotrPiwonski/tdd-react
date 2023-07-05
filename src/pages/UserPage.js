@@ -12,6 +12,16 @@ class UserPage extends Component {
     }
 
     async componentDidMount() {
+        this.loadUser();
+    }
+
+    async componentDidUpdate(prevProps, prevState) {
+        if (prevProps.match.params.id !== this.props.match.params.id) {
+            this.loadUser();
+        }
+    }
+
+    loadUser = async () => {
         this.setState({pendingApiCall: true});
         try {
             const response = await getUserById(this.props.match.params.id);
