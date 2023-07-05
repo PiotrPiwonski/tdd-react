@@ -152,6 +152,34 @@ describe("Profile Card", () => {
         editInput = screen.getByLabelText("Change your username");
         expect(editInput).toHaveValue("new-username");
     });
+    it("hides edit layout after clicking cancel", async () => {
+        await setupInEditMode();
+        await userEvent.click(screen.getByRole("button", {name: "Cancel"}));
+        const editButton = await screen.findByRole("button", {name: "Edit"});
+        expect(editButton).toBeInTheDocument();
+    });
+    it("displays the original username after username is chamged in edit mode but cancel", async () => {
+        await setupInEditMode();
+        let editInput = screen.getByLabelText("Change your username");
+        await userEvent.clear(editInput);
+        await userEvent.type(editInput, "new-username");
+        await userEvent.click(screen.getByRole("button", {name: "Cancel"}));
+        const header = screen.getByRole("heading", {name: "user5"});
+        expect(header).toBeInTheDocument();
+    });
+    it("displays last updated name after clicking cancel in second edit", async () => {
+        await setupInEditMode();
+        let editInput = screen.getByLabelText("Change your username");
+        await userEvent.clear(editInput);
+        await userEvent.type(editInput, "new-username");
+        await userEvent.click(saveButton);
+        const editButton = await screen.findByRole("button", {name: "Edit"});
+        await userEvent.click(editButton);
+        await userEvent.click(screen.getByRole("button", {name: "Cancel"}));
+        const header = screen.getByRole("heading", {name: "new-username"});
+        expect(header).toBeInTheDocument();
+
+    });
 });
 
 console.error = () => {};
