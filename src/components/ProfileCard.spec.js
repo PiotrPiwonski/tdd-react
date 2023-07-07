@@ -178,7 +178,14 @@ describe("Profile Card", () => {
         await userEvent.click(screen.getByRole("button", {name: "Cancel"}));
         const header = screen.getByRole("heading", {name: "new-username"});
         expect(header).toBeInTheDocument();
-
+    });
+    it("displays delete button when logged in user is shown on card", async () => {
+        await setup();
+        expect(screen.getByRole("button", {name: "Delete My Account"})).toBeInTheDocument();
+    });
+    it("does not delete button for another user", async () => {
+        await setup({id: 2, username: "user2"});
+        expect(screen.queryByRole("button", {name: "Delete My Account"})).not.toBeInTheDocument();
     });
 });
 
