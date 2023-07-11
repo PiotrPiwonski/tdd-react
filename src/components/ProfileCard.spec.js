@@ -4,6 +4,7 @@ import storage from "../state/storage";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+import async from "async";
 
 let count, id, requestBody, header;
 const server = setupServer(
@@ -203,6 +204,14 @@ describe("Profile Card", () => {
         expect(screen.queryByText("Are you sure to delete your account?")).toBeInTheDocument();
         expect(screen.queryByRole("button", {name: "Cancel"})).toBeInTheDocument();
         expect(screen.queryByRole("button", {name: "Yes"})).toBeInTheDocument();
+    });
+    it("removes modal after clicking cancel", async () => {
+        await setup();
+        const deleteButton = screen.queryByRole("button", {name: "Delete My Account"});
+        await userEvent.click(deleteButton);
+        await userEvent.click(screen.queryByRole("button", {name: "Cancel"}));
+        const modal = screen.queryByTestId("modal");
+        expect(modal).not.toBeInTheDocument();
     });
 });
 
