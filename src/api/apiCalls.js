@@ -37,4 +37,8 @@ export const updateUser = (id, body) => {
 
 export const logout = () => {
     return axios.post("/api/1.0/logout");
-}
+};
+
+export const deleteUser = (id) => {
+    return axios.delete(`/api/1.0/users/${id}`);
+};

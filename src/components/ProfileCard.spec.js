@@ -4,7 +4,6 @@ import storage from "../state/storage";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import async from "async";
 
 let count, id, requestBody, header;
 const server = setupServer(
@@ -12,6 +11,11 @@ const server = setupServer(
         count += 1;
         id = req.params.id;
         requestBody = req.body;
+        header = req.headers.get("Authorization");
+        return res(ctx.status(200));
+    }),
+    rest.delete('/api/1.0/users/:id', (req, res, ctx) => {
+        id = req.params.id;
         header = req.headers.get("Authorization");
         return res(ctx.status(200));
     })
@@ -212,6 +216,25 @@ describe("Profile Card", () => {
         await userEvent.click(screen.queryByRole("button", {name: "Cancel"}));
         const modal = screen.queryByTestId("modal");
         expect(modal).not.toBeInTheDocument();
+    });
+    it("dispalys spinner while delete api call in progress", async () => {
+        await setup();
+        const deleteButton = screen.queryByRole("button", {name: "Delete My Account"});
+        await userEvent.click(deleteButton);
+        expect(screen.queryByRole("status")).not.toBeInTheDocument();
+        await userEvent.click(screen.queryByRole("button", {name: "Yes"}));
+        const spinner = screen.getByRole("status");
+        await waitForElementToBeRemoved(spinner);
+    });
+    it("sends logged in user id and authorization header in delete api call", async () => {
+        await setup();
+        const deleteButton = screen.queryByRole("button", {name: "Delete My Account"});
+        await userEvent.click(deleteButton);
+        await userEvent.click(screen.queryByRole("button", {name: "Yes"}));
+        const spinner = screen.getByRole("status");
+        await waitForElementToBeRemoved(spinner);
+        expect(header).toBe('auth header value');
+        expect(id).toBe("5");
     });
 });
 
