@@ -3,6 +3,7 @@ import logo from "../assets/hoaxify.png";
 import { useTranslation } from "react-i18next";
 import {useSelector, useDispatch} from "react-redux";
 import {logout} from "../api/apiCalls";
+import {logoutSuccess} from "../state/authActions";
 
 const NavBar = (props) => {
     const { t } = useTranslation();
@@ -14,9 +15,7 @@ const NavBar = (props) => {
         try {
             await logout();
         } catch (error) {}
-        dispatch({
-            type: "logout-success"
-        })
+        dispatch(logoutSuccess());
     }
     return (
         <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
